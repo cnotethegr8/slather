@@ -51,6 +51,11 @@ module Slather
       end
       private :github_repo_name
 
+      def parallel
+        ENV['CI_PARALLEL'] != nil
+      end
+      private :parallel
+
       def jenkins_branch_name
         branch_name = ENV['GIT_BRANCH'] || ENV['BRANCH_NAME']
         if branch_name.include? 'origin/'
@@ -258,7 +263,8 @@ module Slather
               :source_files => coverage_files.map(&:as_json),
               :service_build_url => github_build_url,
               :service_pull_request => github_pull_request,
-              :git => github_git_info
+              :git => github_git_info,
+              :parallel => parallel
             }.to_json
           else
             raise StandardError, "Environment variable `GITHUB_RUN_ID` not set.  Is this running on github build?"
